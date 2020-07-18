@@ -4,10 +4,11 @@ import React from 'react';
 
 class Sqare extends React.Component{
     render(){
+
         return (
-            <div>
-                <h1>Square</h1>
-            </div>
+            
+        <button name = {this.props.x + "," + this.props.y} onClick ={this.props.handler}> {this.props.matrix}</button>
+         
         )
     }
 }
