@@ -1,1 +1,20 @@
 /* Game style goes here*/
+Tic{
+    align-self: center;
+    align-content: center;
+}
+Sketch{
+    background-color: firebrick;
+}
+h1 {
+    color: blue;
+}
+
+
+.dividing {
+    display:flex; 
+    flex-direction:row;
+    justify-content: space-around;
+    align-items: center;
+    margin: auto;
+}

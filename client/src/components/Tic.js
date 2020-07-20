@@ -59,7 +59,7 @@ let win = false;
 const mouseClicked = (p5) => {
   x = p5.mouseX;
   y = p5.mouseY;
- if(x < 600 && y < 600 && !win){
+ if(x < 600 && y < 600 && !win && x > 0 && y > 0){
    let px = p5.floor(x/200);
    let py = p5.floor(y/200);
    let tempVal = -1;
@@ -138,6 +138,11 @@ function logic(){
   };
   */
 
-	return (<Sketch setup={setup} mouseClicked={mouseClicked} />);
+	return (<Sketch style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px",
+  }} setup={setup} mouseClicked={mouseClicked} />);
 };
 export default Tic;
