@@ -24,13 +24,11 @@ function Tic(props) {
   };
   const draw = (p5) => {
     if (props.isClicked) {
-      console.log("Inside draw")
       update(p5);
       props.falseIsClicked();
     }
   }
   function update(p5) {
-    console.log("777")
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
     value = 0;
     matrix = [[0, 0, 0],
@@ -38,7 +36,6 @@ function Tic(props) {
     [0, 0, 0]];
     flag = true;
     win = false;
-    console.log("win: " + win)
     p5.background(0);
     p5.stroke(255);
     p5.strokeWeight(10);
@@ -56,14 +53,12 @@ function Tic(props) {
     p5.rect(x * 200, y * 200, 200, 200);
   }
   const mouseClicked = (p5) => {
-    console.log(props)
     x = p5.mouseX;
     y = p5.mouseY;
     if (x < 600 && y < 600 && !win && x > 0 && y > 0) {
       let px = p5.floor(x / 200);
       let py = p5.floor(y / 200);
       let tempVal = -1;
-      console.log("px: " + px + " py: " + py);
       if (matrix[px][py] === 0) {
         if (flag) {
           tempVal = -1;
