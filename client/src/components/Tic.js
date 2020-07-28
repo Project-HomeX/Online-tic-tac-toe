@@ -1,26 +1,40 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import socketIOClient from "socket.io-client";
 // import logo from './logo.svg';
 // import './App.css';
 
 import Sketch from "react-p5";
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let value = 0;
-  let matrix = [[0, 0, 0],
-  [0, 0, 0],
-  [0, 0, 0]];
-  let flag = true;
-  let x;
-  let y;
-  let win;
+let matrix = [[0, 0, 0],
+[0, 0, 0],
+[0, 0, 0]];
+let flag = true;
+let turn = true;
+let x;
+let y;
+let win;
 function Tic(props) {
-  //[v1,v2,v3,h1,h2,h3,d1,d1]
-  
+  let ENDPOINT = "http://127.0.0.1:4000";
+  let socket;
+  let globalP5;
+  useEffect(() => {
+    socket = socketIOClient(ENDPOINT);
+    socket.on("updateMatrix", ({ x, y , flag}) => {
+      turn = flag;
+      colorBoxes(globalP5, x, y);
+      console.log("Recived values\n X: " + x + " Y: " + y);
+    });
+  }, []);
+  // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  //const [matrix, setMatrix] = useState([[0, 0, 0],[0, 0, 0],[0, 0, 0]]);
+  //const [flag, setFlag] = useState(true);
   const setup = (p5, canvasParentRef) => {
     // use parent to render the canvas in this ref
     // (without that p5 will render the canvas outside of your component)
     p5.createCanvas(600, 600).parent(canvasParentRef);
     update(p5);
+    globalP5 = p5;
   };
   const draw = (p5) => {
     if (props.isClicked) {
@@ -30,7 +44,6 @@ function Tic(props) {
   }
   function update(p5) {
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    value = 0;
     matrix = [[0, 0, 0],
     [0, 0, 0],
     [0, 0, 0]];
@@ -53,23 +66,26 @@ function Tic(props) {
     p5.rect(x * 200, y * 200, 200, 200);
   }
   const mouseClicked = (p5) => {
-    x = p5.mouseX;
-    y = p5.mouseY;
-    if (x < 600 && y < 600 && !win && x > 0 && y > 0) {
-      let px = p5.floor(x / 200);
-      let py = p5.floor(y / 200);
-      let tempVal = -1;
-      if (matrix[px][py] === 0) {
-        if (flag) {
-          tempVal = -1;
-        } else {
-          tempVal = 1;
+    if (true) {
+      x = p5.mouseX;
+      y = p5.mouseY;
+      if (x < 600 && y < 600 && !win && x > 0 && y > 0) {
+        let px = p5.floor(x / 200);
+        let py = p5.floor(y / 200);
+        let tempVal = -1;
+        if (matrix[px][py] === 0) {
+          socket.emit("sendNewMove", ({ x: py, y: py }));
+          if (flag) {
+            tempVal = -1;
+          } else {
+            tempVal = 1;
+          }
+          flag = !flag;
+          matrix[px][py] = tempVal;
+          colorBoxes(p5, px, py)
+          addToSum(px, py, tempVal);
+          logic(p5)
         }
-        flag = !flag;
-        matrix[px][py] = tempVal;
-        colorBoxes(p5, px, py)
-        addToSum(px, py, tempVal);
-        logic(p5)
       }
     }
 

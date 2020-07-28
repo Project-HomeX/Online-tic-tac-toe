@@ -8,6 +8,8 @@ import Menu from './Menu'
 import './Game.css'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Score from './Score';
+
+
 //import { post } from '../../../server/routes';
 class Game extends React.Component {
 	constructor(props) {
@@ -25,7 +27,8 @@ class Game extends React.Component {
 		this.removeText = this.removeText.bind(this);
 		this.falseIsClicked = this.falseIsClicked.bind(this);
 		this.genId = this.genId.bind(this);
-	}  
+	} 
+	
 	genId(){
 		let id = uuidv4().substring(0,8);
 		this.setState({id: id});

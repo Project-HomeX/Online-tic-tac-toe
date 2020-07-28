@@ -1,22 +1,33 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const PORT = process.env.PORT || 4000;
+const index = require("./index");
 
-var app = express();
-var cors = require("cors");
-app.use(cors());
+const app = express();
+app.use(index);
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+const server = http.createServer(app);
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+const io = socketIo(server);
+let turn = true;
+let numClients = 0;
+io.on('connect', socket => {
+    numClients ++; 
+    
+    console.log("Client has Joined");
+    //io.broadcast('setUp', turn);
+    socket.on("sendNewMove", ({x,y}) => {
+        console.log("Server recived the following values\nx: " + x + " y: " + y)
+        turn != turn;
+        io.emit("updateMatrix", {x, y, turn});
+    })
+    socket.on("disconnect", () => {
+        numClients --;
+        console.log(numClients,"client has left")
+    })
+    console.log(numClients, socket.id)
+})
 
-module.exports = app;
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
