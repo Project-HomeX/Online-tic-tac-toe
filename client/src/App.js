@@ -5,7 +5,7 @@ import Board from "./components/Board"
 function App() {
   return (
     <div style={{alignContent:"center"}}>
-      <Board />
+      <Game />
     </div>
   );
 }
