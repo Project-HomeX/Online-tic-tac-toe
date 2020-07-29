@@ -6,11 +6,9 @@ import socketIOClient from "socket.io-client";
 
 import Sketch from "react-p5";
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-let matrix = [[0, 0, 0],
-[0, 0, 0],
-[0, 0, 0]];
+let matrix = [[0, 0, 0],[0, 0, 0],[0, 0, 0]];
 let flag = true;
-let turn = true;
+let color = 'red'
 let x;
 let y;
 let win;
@@ -18,14 +16,34 @@ function Tic(props) {
   let ENDPOINT = "http://127.0.0.1:4000";
   let socket;
   let globalP5;
+  let turn = true;
+  // let [turn, setTurn] = useState(true)
+
+  // let [color, setColor] = useState('red');
+  
   useEffect(() => {
-    socket = socketIOClient(ENDPOINT);
-    socket.on("updateMatrix", ({ x, y , flag}) => {
-      turn = flag;
-      colorBoxes(globalP5, x, y);
+   socket = socketIOClient(ENDPOINT);
+   /* socket.on('changeTurn', () => {
+      console.log("Changing turn to true")
+      // setTurn(true)
+      turn = true;
+    })*/
+    socket.on("updateMatrix", ({tempVal, x, y,color,swin}) => {
+      matrix[x][y] = tempVal;
+      
+      console.log('after matrix update: '+turn + ' '+color)
+      colorBoxes(globalP5, x, y,color);
+      win = swin;
+      turn = true;
+      console.log("matrix after apdate: ")
+      console.log(matrix)
+      addToSum(x, y, tempVal)
+      logic(globalP5);
+      // color = 'red';
       console.log("Recived values\n X: " + x + " Y: " + y);
     });
-  }, []);
+  }, [ENDPOINT]);
+  
   // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
   //const [matrix, setMatrix] = useState([[0, 0, 0],[0, 0, 0],[0, 0, 0]]);
   //const [flag, setFlag] = useState(true);
@@ -60,35 +78,57 @@ function Tic(props) {
     p5.line(200, 0, 200, 600);
     p5.line(400, 0, 400, 600);
   }
-  function colorBoxes(p5, x, y) {
-    let color = (flag) ? "blue" : "red";
-    p5.fill(color);
+  function colorBoxes(p5, x, y,c) {
+    console.log(c);
+    // let color = (flag) ? "blue" : "red";
+    p5.fill(c);
     p5.rect(x * 200, y * 200, 200, 200);
+    
+    // change
+    
+    if(c === 'red') {
+      color = 'blue';
+    }
+    if(c === 'blue'){
+      color = 'red';
+    }
+    // logic(p5);
+    console.log(color)
+    console.log(matrix)
   }
   const mouseClicked = (p5) => {
-    if (true) {
+    console.log(turn)
+    if (turn) {
+      // setTurn(false)
       x = p5.mouseX;
       y = p5.mouseY;
       if (x < 600 && y < 600 && !win && x > 0 && y > 0) {
         let px = p5.floor(x / 200);
         let py = p5.floor(y / 200);
         let tempVal = -1;
-        if (matrix[px][py] === 0) {
-          socket.emit("sendNewMove", ({ x: py, y: py }));
-          if (flag) {
+        if (matrix[px][py] === 0) { 
+         /* if (flag) {
+            tempVal = -1;
+          } else {
+            tempVal = 1;
+          }*/
+          if (color == 'red') {
             tempVal = -1;
           } else {
             tempVal = 1;
           }
           flag = !flag;
           matrix[px][py] = tempVal;
-          colorBoxes(p5, px, py)
+          
+          turn = false;
+          // color = 'blue';
           addToSum(px, py, tempVal);
           logic(p5)
+          socket.emit("sendNewMove", ({tempVal, x: px, y: py, color,win}));
+          colorBoxes(p5, px, py,color)
         }
       }
     }
-
   };
 
   //[v1,v2,v3,h1,h2,h3,d1,d1]
@@ -138,6 +178,8 @@ function Tic(props) {
           props.updateScore(0, 1);
         }
         win = true;
+        console.log("updating score after win - true :" )
+        console.log(matrix)
       }
     }
   }
@@ -158,4 +200,6 @@ function Tic(props) {
     padding: "10px",
   }} setup={setup} draw={draw} mouseClicked={mouseClicked} />);
 };
+
+
 export default Tic;
