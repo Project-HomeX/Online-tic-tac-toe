@@ -38,7 +38,7 @@ function Tic(props) {
     socket.on('reset', () => {
       update(globalP5);
     })
-  }, [ENDPOINT]);
+  }, []);
 
   // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
   //const [matrix, setMatrix] = useState([[0, 0, 0],[0, 0, 0],[0, 0, 0]]);
@@ -52,7 +52,7 @@ function Tic(props) {
   };
   const draw = (p5) => {
     if (props.isClicked) {
-      socket.emit('reset');
+      socket.emit('reset', props.id + props.joiningId);
       update(p5);
       props.falseIsClicked();
     }  
@@ -60,13 +60,15 @@ function Tic(props) {
       console.log("Befor e JoinRoom " + socket.id)
       props.genId(socket.id);
       props.falseIsGenerator();
-      socket.emit('Joi nRoom', socket.id);
-      console.log("Af te r Jo in Room " + socket.id)
+      console.log(socket)
+      socket.emit('JoinRoom', socket.id);
+      console.log("Af te  r  Jo in Room " + socket.id)
 
     }  
     if(props.isJoiner){
-      console.log("mewww")
       socket.emit('findAndJoin', props.joiningId);
+      console.log(socket)
+      console.log("me    ww")
       props.falseIsJoiner();
     }    
   }
@@ -136,7 +138,7 @@ function Tic(props) {
           // color = 'blue';
           addToSum(px, py, tempVal);
           logic(p5, true)
-          socket.emit("sendNewMove", ({ tempVal, x: px, y: py, color, win }));
+          socket.emit("sendNewMove", ({ tempVal, x: px, y: py, color, win, room :props.id + props.joiningId}));
           colorBoxes(p5, px, py, color)
         }
       }

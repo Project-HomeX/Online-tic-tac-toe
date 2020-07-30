@@ -101,6 +101,7 @@ class Game extends React.Component {
 					isJoiner={this.state.isJoiner}
 					falseIsJoiner={this.falseIsJoiner}
 					joiningId = {this.state.joiningId}
+					id = {this.state.id}
 				/>
 				<Score
 					player1Score={this.state.player1Score}

@@ -10,7 +10,7 @@ app.use(index);
 
 const server = http.createServer(app);
 
-const users = [];
+const rooms = [];
 
 const io = socketIo(server);
 let turn = true;
@@ -19,33 +19,44 @@ io.on('connect', socket => {
     numClients++;
     console.log("Client has Joined");
     // if(users.length<2)
-    users.push(socket);
-    if (users.length >= 2) {
+    //users.push(socket);
+    if (true) {
         //  let otherSocket = users.find(user => user.id !== socket.id);
         // console.log("other: "+ otherSocket.id + " this:" + socket.id);
         //io.broadcast('setUp', turn);
-        socket.on("sendNewMove", ({ tempVal, x, y, color, win }) => {
+        socket.on("sendNewMove", ({ tempVal, x, y, color, win, room}) => {
             // otherSocket = users.find(user => user.id !== socket.id);
             console.log("Server recived the following values\nx: " + x + " y: " + y)
             // otherSocket.emit('changeTurn');
             // console.log("turn: "+turn)
             //socket.broadcast.emit("updateMatrix", { tempVal,x, y,color});
-            socket.broadcast.emit("updateMatrix", { tempVal, x, y, color, win });
-
+            socket.to(room).emit("updateMatrix", { tempVal, x, y, color, win });
         })
         socket.on('JoinRoom', (room) => {
-            console.log("ninja")
-            socket.join(room);
-            console.log("joined " + room) 
+            if (!rooms.includes(socket.id)) {
+                rooms.push(room);
+                console.log("nin ja")
+                socket.join(room);
+                console.log("joined " + room)
+            }
         })
+
         socket.on('findAndJoin', (room) => {
-            console.log(io.sockets.adapter.rooms[room])
-            socket.join(room);
-            
+            if (!rooms.includes(socket.id)) {
+                console.log("Inside findandjoin")
+                console.log(io.sockets.adapter.rooms[room])
+                let r = io.sockets.adapter.rooms[room];
+                if (r.length == 1) {
+                    socket.join(room);
+                }
+                console.log(io.sockets.adapter.rooms[room])
+            }
+
+
         })
-       
-        socket.on('reset', () => {
-            socket.broadcast.emit('reset');
+
+        socket.on('reset', (room) => {
+            socket.to(room).emit('reset');
         })
 
     }
