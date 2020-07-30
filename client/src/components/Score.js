@@ -7,14 +7,15 @@ class Score extends React.Component {
                 <h3> {this.props.text} </h3>
                 <h1>Score</h1>
                 <div>
-                    <div className='white'>
+                    <div className='you'>
                         <p>
-                            white: {this.props.player1Score}/
+                            You: {this.props.player1Score}/
                             {this.props.totalGamePlayed}
                         </p>
                     </div>
-                    <div className='black'>
-                        <p>black: {this.props.player2Score}/
+                    <div className='other'>
+                        <p>
+                            Opponent: {this.props.player2Score}/
                             {this.props.totalGamePlayed}
                         </p>
                     </div>

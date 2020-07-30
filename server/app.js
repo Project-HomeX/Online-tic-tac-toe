@@ -1,13 +1,13 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
- 
+
 const PORT = process.env.PORT || 4000;
 const index = require("./index");
- 
+
 const app = express();
 app.use(index);
- 
+
 const server = http.createServer(app);
 
 const users = [];
@@ -17,21 +17,35 @@ let turn = true;
 let numClients = 0;
 io.on('connect', socket => {
     numClients++;
+    console.log("Client has Joined");
     // if(users.length<2)
-        users.push(socket);
+    users.push(socket);
     if (users.length >= 2) {
-        let otherSocket = users.find(user => user.id !== socket.id);
-        console.log("other: "+ otherSocket.id + " this:" + socket.id);
-        console.log("Client has Joined");
+        //  let otherSocket = users.find(user => user.id !== socket.id);
+        // console.log("other: "+ otherSocket.id + " this:" + socket.id);
         //io.broadcast('setUp', turn);
-        socket.on("sendNewMove", ({ tempVal,x, y,color,win}) => {
-            otherSocket = users.find(user => user.id !== socket.id);
+        socket.on("sendNewMove", ({ tempVal, x, y, color, win }) => {
+            // otherSocket = users.find(user => user.id !== socket.id);
             console.log("Server recived the following values\nx: " + x + " y: " + y)
             // otherSocket.emit('changeTurn');
             // console.log("turn: "+turn)
             //socket.broadcast.emit("updateMatrix", { tempVal,x, y,color});
-            socket.broadcast.emit("updateMatrix", { tempVal,x, y,color,win});
+            socket.broadcast.emit("updateMatrix", { tempVal, x, y, color, win });
 
+        })
+        socket.on('JoinRoom', (room) => {
+            console.log("ninja")
+            socket.join(room);
+            console.log("joined " + room) 
+        })
+        socket.on('findAndJoin', (room) => {
+            console.log(io.sockets.adapter.rooms[room])
+            socket.join(room);
+            
+        })
+       
+        socket.on('reset', () => {
+            socket.broadcast.emit('reset');
         })
 
     }
@@ -41,7 +55,7 @@ io.on('connect', socket => {
     })
     console.log(numClients, socket.id)
 })
- 
+
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 
@@ -71,7 +85,7 @@ server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 //     //     socket.emit("color", "red"); 
 //     // }
 //     console.log("Client has Joined");
-    
+
 //     socket.on("sendNewMove", ({x,y}) => {
 //         console.log("Server recived the following values\nx: " + x + " y: " + y)
 //         socket.broadcast.to("room").emit("updateMatrix", {x, y});
@@ -86,7 +100,7 @@ server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 //         io.emit("updateWinStatus");
 //     })
 
-    
+
 //     console.log(numClients, socket.id)
 // })
 

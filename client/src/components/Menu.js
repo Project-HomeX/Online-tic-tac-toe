@@ -5,18 +5,18 @@ import Button from 'react-bootstrap/Button'
 
 
 class Menu extends React.Component {
-    
+
     render() {
         return (
-            <div> 
-                <Button variant="primary" onClick = {this.props.removeText}>Restart</Button> <br/>
-                <button> Join</button>
-                <input type="text" /> <br/>
-                <button onClick = {this.props.genId}> Generate</button> 
-                <input value = {this.props.gameId} type="text" max="6"/>
-                
+            <div>
+                <Button variant="primary" onClick={this.props.removeText}>Restart</Button> <br />
+                <button onClick={this.props.handleJoin}> Join</button>
+                <input type="text" onChange = {this.props.handleJoinId}/> <br />
+                <button onClick={this.props.generateHandle}> Generate</button>
+                <input readOnly value={this.props.gameId} type="text" max="6" />
+
             </div>
-            
+
         )
     }
 }

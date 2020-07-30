@@ -20,58 +20,93 @@ class Game extends React.Component {
 			totalGamePlayed: 0,
 			displayedText: "",
 			isClicked: false,
-			id: ""
+			id: "",
+			joiningId: "",
+			isGenerator: false,
+			isJoiner: false
 		}
 		//console.log(props)
 		this.updateScore = this.updateScore.bind(this);
 		this.removeText = this.removeText.bind(this);
-		this.falseIsClicked = this.falseIsClicked.bind(this);
 		this.genId = this.genId.bind(this);
-	} 
-	
-	genId(){
-		let id = uuidv4().substring(0,8);
-		this.setState({id: id});
-		fetch('http://localhost:3000/generateId', 
-			{
-				method: "POST", 
-				body: JSON.stringify({ 	
-					id: id
-				}), 
-				headers: { 
-					"Content-type": "application/json; charset=UTF-8"
-				} 
-			})
-    }
-	updateScore(score1, score2) {
+		this.generateHandle = this.generateHandle.bind(this);
+		this.falseIsGenerator = this.falseIsGenerator.bind(this);
+		this.falseIsClicked = this.falseIsClicked.bind(this);
+		this.falseIsJoiner = this.falseIsJoiner.bind(this);
+		this.handleJoin = this.handleJoin.bind(this);
+		this.handleJoinId = this.handleJoinId.bind(this);
+	}
+	generateHandle() {
+		this.setState({ isGenerator: true })
+	}
+	genId(id) {
+		this.setState({ id: id });
+		// let id = uuidv4().substring(0, 8);
+		// this.setState({ id: id });
+		// fetch('http://localhost:3000/generateId',
+		// 	{
+		// 		method: "POST",
+		// 		body: JSON.stringify({
+		// 			id: id
+		// 		}),
+		// 		headers: {
+		// 			"Content-type": "application/json; charset=UTF-8"
+		// 		}
+		// 	})
+	}
+	handleJoin(e){
+		this.setState({isJoiner: true});
+	}
+	handleJoinId(e){
+		console.log(this.state.joiningId)
+		this.setState({joiningId: e.target.value});
+	}
+	updateScore(score1, score2, didWin) {
 		this.setState({
 			player1Score: this.state.player1Score + score1,
 			player2Score: this.state.player2Score + score2,
 			totalGamePlayed: this.state.totalGamePlayed + score1 + score2,
-			displayedText: "player" + (score1 == 1? "1 " : "2 ") + " has Won"
+			displayedText: (didWin ? "You won" : "You lost")
 		});
 	}
-	removeText(){
-		this.setState({displayedText: "", isClicked : true});
+	removeText() {
+		this.setState({ displayedText: "", isClicked: true });
 	}
 
-	falseIsClicked(){
-		this.setState({isClicked: false});
+	falseIsClicked() {
+		this.setState({ isClicked: false });
+	}
+	falseIsGenerator() {
+		this.setState({ isGenerator: false });
+	}
+	falseIsJoiner() {
+		this.setState({ isJoiner: false });
 	}
 
 	render() {
 		return (
 			<div className="dividing">
-				<Menu removeText ={this.removeText} genId = {this.genId} gameId = {this.state.id}/>
-				<Tic updateScore={this.updateScore} 
-					isClicked = {this.state.isClicked}
-					 falseIsClicked = {this.falseIsClicked}
-					 />
+				<Menu removeText={this.removeText}
+					generateHandle={this.generateHandle}
+					gameId={this.state.id}
+					handleJoin={this.handleJoin}
+					handleJoinId={this.handleJoinId}
+				/>
+				<Tic updateScore={this.updateScore}
+					isClicked={this.state.isClicked}
+					falseIsClicked={this.falseIsClicked}
+					genId={this.genId}
+					isGenerator={this.state.isGenerator}
+					falseIsGenerator={this.falseIsGenerator}
+					isJoiner={this.state.isJoiner}
+					falseIsJoiner={this.falseIsJoiner}
+					joiningId = {this.state.joiningId}
+				/>
 				<Score
 					player1Score={this.state.player1Score}
 					player2Score={this.state.player2Score}
 					totalGamePlayed={this.state.totalGamePlayed}
-					text = {this.state.displayedText}
+					text={this.state.displayedText}
 				/>
 			</div>
 		);
