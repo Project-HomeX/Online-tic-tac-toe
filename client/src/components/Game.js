@@ -23,7 +23,9 @@ class Game extends React.Component {
 			id: "",
 			joiningId: "",
 			isGenerator: false,
-			isJoiner: false
+			isJoiner: false,
+			roomId: "",
+			playerCount: 0
 		}
 		//console.log(props)
 		this.updateScore = this.updateScore.bind(this);
@@ -35,10 +37,20 @@ class Game extends React.Component {
 		this.falseIsJoiner = this.falseIsJoiner.bind(this);
 		this.handleJoin = this.handleJoin.bind(this);
 		this.handleJoinId = this.handleJoinId.bind(this);
+		this.setRoomId = this.setRoomId.bind(this);
+		this.setPlayerCount = this.setPlayerCount.bind(this);
+
 	}
 	generateHandle() {
-		this.setState({ isGenerator: true })
+		this.setState({ isGenerator: true });
 	}
+	setPlayerCount(count){
+		this.setState({ playerCount: count});
+	}
+	setRoomId(roomId) {
+		this.setState({roomId: roomId});
+	}
+
 	genId(id) {
 		this.setState({ id: id });
 		// let id = uuidv4().substring(0, 8);
@@ -91,6 +103,7 @@ class Game extends React.Component {
 					gameId={this.state.id}
 					handleJoin={this.handleJoin}
 					handleJoinId={this.handleJoinId}
+					playerCount={this.state.playerCount}
 				/>
 				<Tic updateScore={this.updateScore}
 					isClicked={this.state.isClicked}
@@ -102,6 +115,10 @@ class Game extends React.Component {
 					falseIsJoiner={this.falseIsJoiner}
 					joiningId = {this.state.joiningId}
 					id = {this.state.id}
+					roomId = {this.state.roomId}
+					setRoomId = {this.setRoomId}
+					playerCount = {this.state.playerCount}
+					setPlayerCount = {this.setPlayerCount}
 				/>
 				<Score
 					player1Score={this.state.player1Score}

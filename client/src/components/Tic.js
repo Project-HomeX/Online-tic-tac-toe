@@ -16,28 +16,50 @@ let ENDPOINT = "http://127.0.0.1:4000";
 let socket;
 let globalP5;
 let turn = true;
+let numberOfPlayersConnected = 0;
 
 function Tic(props) {
   useEffect(() => {
+    console.log(window.location.pathname)
     socket = socketIOClient(ENDPOINT);
-    
-    socket.on("updateMatrix", ({ tempVal, x, y, color, swin }) => {
-      matrix[x][y] = tempVal;
-      console.log('after matrix update: ' + turn + ' ' + color)
-      colorBoxes(globalP5, x, y, color);
-      win = swin;
-      turn = true;
-      console.log("matrix after apdate: ")
-      console.log(matrix)
-      addToSum(x, y, tempVal)
-      logic(globalP5, false);
-      // color = 'red';
-      console.log("Recived values\n X: " + x + " Y: " + y);
+    props.setRoomId(window.location.pathname);
+    //this will be only called by the second person joining
+    socket.on("set-player-count", (count) => {
+      numberOfPlayersConnected = count;
+      props.setPlayerCount(count);
+    })
+    socket.on("player-left", () => {
+      props.setPlayerCount(1);
+      numberOfPlayersConnected = 1;
+      update(globalP5);
+    })
+    //Don't want to play game until we have 2 players
+
+    socket.on("updateMatrix", ({ tempVal, x, y, color, swin, playerCount }) => {
+      numberOfPlayersConnected = playerCount;
+      props.setPlayerCount(playerCount)
+      console.log("props:  " + props.playerCount + " from socket: " + playerCount);
+      if (numberOfPlayersConnected == 2) {
+        console.log("player  count: " + props.playerCount)
+        matrix[x][y] = tempVal;
+        console.log('after  matrix  update: ' + turn + ' ' + color)
+        colorBoxes(globalP5, x, y, color);
+        win = swin;
+        turn = true;
+        console.log("matrix after apdate: ")
+        console.log(matrix)
+        addToSum(x, y, tempVal)
+        logic(globalP5, false);
+        // color = 'red';
+        console.log("Recived values\n X: " + x + " Y: " + y);
+      }
     });
 
     socket.on('reset', () => {
       update(globalP5);
     })
+
+
   }, []);
 
   // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -48,29 +70,29 @@ function Tic(props) {
     // (without that p5 will render the canvas outside of your component)
     p5.createCanvas(600, 600).parent(canvasParentRef);
     update(p5);
-    globalP5 =  p5;
+    globalP5 = p5;
   };
   const draw = (p5) => {
     if (props.isClicked) {
-      socket.emit('reset', props.id + props.joiningId);
+      if (props.playerCount == 2) socket.emit('reset', props.roomId);
       update(p5);
       props.falseIsClicked();
-    }  
-    if(props.isGenerator){
-      console.log("Befor e JoinRoom " + socket.id)
-      props.genId(socket.id);
-      props.falseIsGenerator();
-      console.log(socket)
-      socket.emit('JoinRoom', socket.id);
-      console.log("Af te  r  Jo in Room " + socket.id)
+    }
+    // if(props.isGenerator){
+    //   console.log("Befor e JoinRoom " + socket.id)
+    //   props.genId(socket.id);
+    //   props.falseIsGenerator();
+    //   console.log(socket)
+    //   socket.emit('JoinRoom', socket.id);
+    //   console.log("Af te  r  Jo in Room " + socket.id)
 
-    }  
-    if(props.isJoiner){
-      socket.emit('findAndJoin', props.joiningId);
+    // }  
+    if (props.isJoiner) {
+      socket.emit('findAndJoin', props.roomId, props.setPlayerCount);
       console.log(socket)
-      console.log("me    ww")
+      console.log("me  w  w  ")
       props.falseIsJoiner();
-    }    
+    }
   }
   function update(p5) {
     sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -111,8 +133,9 @@ function Tic(props) {
     console.log(matrix)
   }
   const mouseClicked = (p5) => {
-    console.log("turn: " + turn)
-    if (turn) {
+    console.log("turn:  " + turn)
+    if (turn && numberOfPlayersConnected == 2) {
+      console.log("player  count: " + props.playerCount)
       // setTurn(false)
       x = p5.mouseX;
       y = p5.mouseY;
@@ -138,7 +161,7 @@ function Tic(props) {
           // color = 'blue';
           addToSum(px, py, tempVal);
           logic(p5, true)
-          socket.emit("sendNewMove", ({ tempVal, x: px, y: py, color, win, room :props.id + props.joiningId}));
+          socket.emit("sendNewMove", ({ tempVal, x: px, y: py, color, win, room: props.roomId, playerCount: props.playerCount }));
           colorBoxes(p5, px, py, color)
         }
       }
@@ -188,7 +211,7 @@ function Tic(props) {
       if (sum[x] === -3 || sum[x] === 3) {
         didWin ? props.updateScore(1, 0, didWin) : props.updateScore(0, 1, didWin);
         win = true;
-        console.log("updating score after win - true :")
+        console.log("updating scor e after win - true :")
         console.log(matrix)
       }
     }
