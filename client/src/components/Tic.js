@@ -24,7 +24,11 @@ function Tic(props) {
     socket = socketIOClient(ENDPOINT);
     props.setRoomId(window.location.pathname);
     //this will be only called by the second person joining
+    socket.on('setRoomId', (room) => {
+      props.setRoomId(room);
+    })
     socket.on("set-player-count", (count) => {
+      console.log("set-player-count")
       numberOfPlayersConnected = count;
       props.setPlayerCount(count);
     })
@@ -34,20 +38,24 @@ function Tic(props) {
       update(globalP5);
     })
     //Don't want to play game until we have 2 players
+    socket.on('updateMatrix', (e) => {
+      console.log("trying to update matrix");
+    })
 
     socket.on("updateMatrix", ({ tempVal, x, y, color, swin, playerCount }) => {
-      numberOfPlayersConnected = playerCount;
-      props.setPlayerCount(playerCount)
+      console.log("inside update matrix")
+      //numberOfPlayersConnected = playerCount;
+      //props.setPlayerCount(playerCount)
       console.log("props:  " + props.playerCount + " from socket: " + playerCount);
       if (numberOfPlayersConnected == 2) {
-        console.log("player  count: " + props.playerCount)
+        // console.log("player  count: " + props.playerCount)
         matrix[x][y] = tempVal;
-        console.log('after  matrix  update: ' + turn + ' ' + color)
+        // console.log('after  matrix  update: ' + turn + ' ' + color)
         colorBoxes(globalP5, x, y, color);
         win = swin;
         turn = true;
-        console.log("matrix after apdate: ")
-        console.log(matrix)
+        // console.log("matrix after apdate: ")
+        // console.log(matrix)
         addToSum(x, y, tempVal)
         logic(globalP5, false);
         // color = 'red';
@@ -78,19 +86,10 @@ function Tic(props) {
       update(p5);
       props.falseIsClicked();
     }
-    // if(props.isGenerator){
-    //   console.log("Befor e JoinRoom " + socket.id)
-    //   props.genId(socket.id);
-    //   props.falseIsGenerator();
-    //   console.log(socket)
-    //   socket.emit('JoinRoom', socket.id);
-    //   console.log("Af te  r  Jo in Room " + socket.id)
-
-    // }  
     if (props.isJoiner) {
       socket.emit('findAndJoin', props.roomId, props.setPlayerCount);
-      console.log(socket)
-      console.log("me  w  w  ")
+      // console.log(socket)
+      // console.log("Button join is being clicked! ")
       props.falseIsJoiner();
     }
   }
@@ -115,7 +114,7 @@ function Tic(props) {
     p5.line(400, 0, 400, 600);
   }
   function colorBoxes(p5, x, y, c) {
-    console.log(c);
+    // console.log(c);
     // let color = (flag) ? "blue" : "red";
     p5.fill(c);
     p5.rect(x * 200, y * 200, 200, 200);
@@ -129,13 +128,13 @@ function Tic(props) {
       color = 'red';
     }
     // logic(p5);
-    console.log(color)
-    console.log(matrix)
+    // console.log(color)
+    // console.log(matrix)
   }
   const mouseClicked = (p5) => {
-    console.log("turn:  " + turn)
+    console.log("number of players" + numberOfPlayersConnected)
     if (turn && numberOfPlayersConnected == 2) {
-      console.log("player  count: " + props.playerCount)
+      console.log("player   count: " + props.playerCount)
       // setTurn(false)
       x = p5.mouseX;
       y = p5.mouseY;

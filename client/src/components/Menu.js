@@ -10,10 +10,10 @@ class Menu extends React.Component {
         let playerCount = this.props.playerCount;
         return (
             <div>
-                <h1>{playerCount} player{playerCount == 1? "" : "s"} in this room</h1>
+                <h1>{playerCount} player{playerCount == 1 ? "" : "s"} in this room</h1>
                 <Button variant="primary" onClick={this.props.removeText}>Restart</Button> <br />
                 <button onClick={this.props.handleJoin}> Join</button>
-                <input type="text" onChange = {this.props.handleJoinId}/> <br />
+                <input type="text" onChange={this.props.handleJoinId} /> <br />
                 <button onClick={this.props.generateHandle}> Generate</button>
                 <input readOnly value={this.props.gameId} type="text" max="6" />
 
