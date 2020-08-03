@@ -20,11 +20,13 @@ function App() {
         )}/>
         {/* <Route path="/WaitingRoom" component={WaitingRoom}/> */}
         <Route path="/RandomGame" component={Game}/>
-        <Route path="/LocalGame" component={Game}/>
+        <Route path="/game" component={Game}/>
         <Route path="/WaitingRoom">
           <WaitingRoom userLink={userLink} />
         </Route>
-        <Route path="/game" component={Game}/>
+        <Route path="/LocalGame">
+          <Game single={true}/>
+        </Route>
       </div>
     </Router>
   );
