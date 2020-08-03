@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Sketch from 'react-p5';
 import Tic from './Tic';
+import TicSinglPlayerF from './TicSinglPlayerF'
 import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu'
 import './Game.css'
@@ -44,11 +45,11 @@ class Game extends React.Component {
 	generateHandle() {
 		this.setState({ isGenerator: true });
 	}
-	setPlayerCount(count){
-		this.setState({ playerCount: count});
+	setPlayerCount(count) {
+		this.setState({ playerCount: count });
 	}
 	setRoomId(roomId) {
-		this.setState({roomId: roomId});
+		this.setState({ roomId: roomId });
 	}
 
 	genId(id) {
@@ -66,19 +67,23 @@ class Game extends React.Component {
 		// 		}
 		// 	})
 	}
-	handleJoin(e){
-		this.setState({isJoiner: true});
+	handleJoin(e) {
+		this.setState({ isJoiner: true });
 	}
-	handleJoinId(e){
+	handleJoinId(e) {
 		console.log(this.state.joiningId)
-		this.setState({joiningId: e.target.value});
+		this.setState({ joiningId: e.target.value });
 	}
 	updateScore(score1, score2, didWin) {
+		if(!this.props.single){
+			this.setState({
+				displayedText: (didWin ? "You won" : "You lost")
+			})
+		}
 		this.setState({
 			player1Score: this.state.player1Score + score1,
 			player2Score: this.state.player2Score + score2,
-			totalGamePlayed: this.state.totalGamePlayed + score1 + score2,
-			displayedText: (didWin ? "You won" : "You lost")
+			totalGamePlayed: this.state.totalGamePlayed + score1 + score2
 		});
 	}
 	removeText() {
@@ -96,6 +101,30 @@ class Game extends React.Component {
 	}
 
 	render() {
+		let TicToDisplay;
+		if (this.props.single) {
+			TicToDisplay = <TicSinglPlayerF updateScore={this.updateScore}
+				isClicked={this.state.isClicked}
+				falseIsClicked={this.falseIsClicked}
+			/>
+		}
+		else {
+			TicToDisplay = <Tic updateScore={this.updateScore}
+				isClicked={this.state.isClicked}
+				falseIsClicked={this.falseIsClicked}
+				genId={this.genId}
+				isGenerator={this.state.isGenerator}
+				falseIsGenerator={this.falseIsGenerator}
+				isJoiner={this.state.isJoiner}
+				falseIsJoiner={this.falseIsJoiner}
+				joiningId={this.state.joiningId}
+				id={this.state.id}
+				roomId={this.state.roomId}
+				setRoomId={this.setRoomId}
+				playerCount={this.state.playerCount}
+				setPlayerCount={this.setPlayerCount}
+			/>
+		}
 		return (
 			<div className="dividing">
 				<Menu removeText={this.removeText}
@@ -104,8 +133,9 @@ class Game extends React.Component {
 					handleJoin={this.handleJoin}
 					handleJoinId={this.handleJoinId}
 					playerCount={this.state.playerCount}
+					single = {this.props.single}
 				/>
-				<Tic updateScore={this.updateScore}
+				{/*<Tic updateScore={this.updateScore}
 					isClicked={this.state.isClicked}
 					falseIsClicked={this.falseIsClicked}
 					genId={this.genId}
@@ -119,12 +149,19 @@ class Game extends React.Component {
 					setRoomId = {this.setRoomId}
 					playerCount = {this.state.playerCount}
 					setPlayerCount = {this.setPlayerCount}
-				/>
+		/>*/}
+				{/* <TicSinglPlayerF updateScore={this.updateScore}
+								isClicked={this.state.isClicked}
+								falseIsClicked={this.falseIsClicked}
+				 /> */}
+
+				{TicToDisplay}
 				<Score
 					player1Score={this.state.player1Score}
 					player2Score={this.state.player2Score}
 					totalGamePlayed={this.state.totalGamePlayed}
 					text={this.state.displayedText}
+					single={this.props.single}
 				/>
 			</div>
 		);
