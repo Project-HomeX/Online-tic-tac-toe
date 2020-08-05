@@ -12,8 +12,8 @@ class Menu extends React.Component {
         return (
             <div>
                 {this.props.single?"": (<h1>{playerCount} player{playerCount == 1? "" : "s"} in this room</h1>)}
-                <Button variant="primary" onClick={this.props.removeText}>Restart</Button> <br />
-                {this.props.single?"": ( <button onClick={this.props.handleJoin}> Join</button>)}
+                <button type="button" class="btn btn-outline-primary" style={{margin:"auto auto 2em 1em"}} variant="primary" onClick={this.props.removeText}>Restart</button> <br />
+                {this.props.single?"": ( <button type="button" class="btn btn-outline-primary"  onClick={this.props.handleJoin}> Join</button>)}
                
                 {/* <input type="text" onChange = {this.props.handleJoinId}/> <br /> */}
                 {/* <button onClick={this.props.generateHandle}> Generate</button> */}

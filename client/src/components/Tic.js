@@ -17,7 +17,8 @@ let socket;
 let globalP5;
 let turn = true;
 let numberOfPlayersConnected = 0;
-
+let width = 600;
+let height = 600;
 function Tic(props) {
   useEffect(() => {
     console.log(window.location.pathname)
@@ -76,7 +77,7 @@ function Tic(props) {
   const setup = (p5, canvasParentRef) => {
     // use parent to render the canvas in this ref
     // (without that p5 will render the canvas outside of your component)
-    p5.createCanvas(600, 600).parent(canvasParentRef);
+    p5.createCanvas(width, height).parent(canvasParentRef);
     update(p5);
     globalP5 = p5;
   };
@@ -105,6 +106,7 @@ function Tic(props) {
     p5.background(0);
     p5.stroke(255);
     p5.strokeWeight(10);
+    
     // horizontal 
     p5.line(0, 200, 600, 200);
     p5.line(0, 400, 600, 400);

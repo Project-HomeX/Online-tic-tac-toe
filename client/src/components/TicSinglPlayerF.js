@@ -14,6 +14,10 @@ let y;
 let win;
 let globalP5;
 let turn = true;
+let W = 400;
+let H = 400;
+
+let isResized = false;
 
 function TicSinglPlayerF(props) {
 
@@ -26,14 +30,32 @@ function TicSinglPlayerF(props) {
   const setup = (p5, canvasParentRef) => {
     // use parent to render the canvas in this ref
     // (without that p5 will render the canvas outside of your component)
-    p5.createCanvas(600, 600).parent(canvasParentRef);
+    W = p5.windowWidth*0.5;
+    H = p5.windowHeight*0.5;
+
+    // let k = W<H?W:H;
+    W = H = W<H?W:H
+    p5.createCanvas(W, H).parent(canvasParentRef);
     update(p5);
     globalP5 = p5;
   };
+
+  const windowResized = (p5) => {
+    W = p5.windowWidth*0.5;
+    H = p5.windowHeight*0.5;
+    W = H = W<H?W:H
+    p5.resizeCanvas(W, H);
+
+    isResized = true;
+  }
   const draw = (p5) => {
     if (props.isClicked) {
       update(p5);
       props.falseIsClicked();
+    }
+    if(isResized){
+      update(p5);
+      isResized = false;
     }
     // if(props.isGenerator){
     //   console.log("Befor e JoinRoom " + socket.id)
@@ -42,34 +64,58 @@ function TicSinglPlayerF(props) {
     //   console.log(socket)
     //   socket.emit('JoinRoom', socket.id);
     //   console.log("Af te  r  Jo in Room " + socket.id)
-
     // }  
   }
   function update(p5) {
-    sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-    matrix = [[0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0]];
-    flag = true;
-    win = false;
-    turn = true;
-    color = 'red'
+
+    if(!isResized){
+      sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      matrix = [[0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]];
+      flag = true;
+      win = false;
+      turn = true;
+      color = 'red'
+    }
+    
     p5.background(0);
-    p5.stroke(255);
+    p5.stroke('#00cc96');
     p5.strokeWeight(10);
     // horizontal 
-    p5.line(0, 200, 600, 200);
-    p5.line(0, 400, 600, 400);
+    p5.line(0, H/3, W, H/3);
+    p5.line(0, 2*H/3, W, 2*H/3);
 
     // vertical 
-    p5.line(200, 0, 200, 600);
-    p5.line(400, 0, 400, 600);
+    p5.line(W/3, 0, W/3, H);
+    p5.line(2*W/3, 0, 2*W/3, H);
+
+    // color each box
+    if(isResized){
+      for(let i = 0; i<matrix.length; i++){
+        for(let j = 0; j<matrix.length; j++){
+          if(matrix[i][j] == -1){
+            colorBoxes(p5,i,j,"red");
+          }
+          else if(matrix[i][j] == 1){
+            colorBoxes(p5,i,j,"blue");
+          }
+        }
+      }
+    }
   }
-  function colorBoxes(p5, x, y) {
+  function colorBoxes(p5, x, y,c) {
+
+    if(isResized){
+      p5.fill(c);
+
+    }
+    else{
+      let color = (flag) ? "blue" : "red";
+      p5.fill(color);
+    }
     // console.log(c);
-    let color = (flag) ? "blue" : "red";
-    p5.fill(color);
-    p5.rect(x * 200, y * 200, 200, 200);
+    p5.rect(x * W/3, y * H/3, W/3, H/3);
 
     // change
 
@@ -92,9 +138,9 @@ function TicSinglPlayerF(props) {
       x = p5.mouseX;
       y = p5.mouseY;
       console.log("win line 94 "+win)
-      if (x < 600 && y < 600 && !win && x > 0 && y > 0) {
-        let px = p5.floor(x / 200);
-        let py = p5.floor(y / 200);
+      if (x < W && y < H && !win && x > 0 && y > 0) {
+        let px = p5.floor(x / (W/3));
+        let py = p5.floor(y / (H/3));
         let tempVal = -1;
         if (matrix[px][py] === 0) {
           if (flag) {
@@ -188,8 +234,9 @@ function TicSinglPlayerF(props) {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "10px",
-  }} setup={setup} draw={draw} mouseClicked={mouseClicked} />);
+    padding: "5em",
+    // backgroundColor: '#00cc96'
+  }} setup={setup} windowResized={windowResized} draw={draw} mouseClicked={mouseClicked} />);
 };
 
 

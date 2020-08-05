@@ -9,12 +9,23 @@ Sketch{
 h1 {
     color: blue;
 }
-
-
 .dividing {
     display:flex; 
     flex-direction:row;
     justify-content: space-around;
     align-items: center;
     margin: auto;
+    min-height: 100vh;
+    background-color: 	#000000	;
+    color: wheat;
+}
+.WhatingRoomContainer {
+    width: 50%;
+    color: rgb(0, 16, 107);
+    margin: 10em auto 10em auto;
+}
+Link {
+    color: white;
+    text-decoration: none;
+    padding: 1em;
 }

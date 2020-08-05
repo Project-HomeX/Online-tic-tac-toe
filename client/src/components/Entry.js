@@ -16,7 +16,8 @@ var EntryChildContainer = {
 }
 const linkStyle = {
     color: 'white',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    margin: '1em',
 }
 export class Entry extends Component {
     render() {
@@ -24,10 +25,10 @@ export class Entry extends Component {
             <div style={EntryContainer}>
                 <div style={EntryChildContainer}>
                     <h1>Welcome to Tic Tact Toe Online</h1>
-                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" />
-                    <button type="button" class="btn btn-primary btn-sm btn-block"><Link style={linkStyle} to="/WaitingRoom">Play A friend Remotly</Link></button>
-                    <button type="button" class="btn btn-primary btn-sm btn-block"><Link style={linkStyle} to="/RandomGame">Join Random Game</Link></button>
-                    <button type="button" class="btn btn-primary btn-sm btn-block"><Link style={linkStyle} to="/LocalGame">Play a friend locally</Link></button>
+                    {/* <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" /> */}
+                    <Link style={linkStyle} to="/WaitingRoom"><button type="button" class="btn btn-primary btn-sm btn-block">Play A friend Remotly</button></Link>
+                    <Link style={linkStyle} to="/RandomGame"><button type="button" class="btn btn-primary btn-sm btn-block">Join Random Game</button></Link>
+                    <Link style={linkStyle} to="/LocalGame"><button type="button" class="btn btn-primary btn-sm btn-block">Play a friend locally</button></Link>
                 </div>
             </div>
             
