@@ -5,6 +5,7 @@ import socketIOClient from "socket.io-client";
 // import './App.css';
 
 import Sketch from "react-p5";
+import p5 from 'p5';
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 let flag = true;
@@ -96,9 +97,12 @@ function TicSinglPlayerF(props) {
         for(let j = 0; j<matrix.length; j++){
           if(matrix[i][j] == -1){
             colorBoxes(p5,i,j,"red");
+            drawO(p5,i,j,'red');
+            
           }
           else if(matrix[i][j] == 1){
             colorBoxes(p5,i,j,"blue");
+            drawX(p5,i,j,'blue');
           }
         }
       }
@@ -108,15 +112,19 @@ function TicSinglPlayerF(props) {
 
     if(isResized){
       p5.fill(c);
-
     }
     else{
       let color = (flag) ? "blue" : "red";
-      p5.fill(color);
+      // p5.fill(color);
+      (color=='blue')?drawX(p5,x,y,"white"):drawO(p5,x,y,"white");
     }
     // console.log(c);
-    p5.rect(x * W/3, y * H/3, W/3, H/3);
+    // p5.rect(x * W/3, y * H/3, W/3, H/3);
 
+    // draw x
+    // start: top right
+    // drawX(p5,x,y,"blue");
+    // drawO(p5,x,y,"black");
     // change
 
     // if (c === 'red') {
@@ -130,6 +138,40 @@ function TicSinglPlayerF(props) {
     // console.log(matrix)
   }
   
+  function drawX(p5,x,y,c){
+    c = 'white';
+    let pf = (W/3)*0.2;
+
+    let topL = {x,y}
+    topL.x = (x*W/3)+pf;
+    topL.y = y * H/3+pf;
+    let bottomR = {x,y} 
+    bottomR.x = (x*W/3)+W/3-pf;
+    bottomR.y = (y*H/3)+H/3-pf;
+    let topR = {x,y}
+    topR.x = x * W/3 + W/3-pf;
+    topR.y = y * H/3+pf;
+    let bottomL = {x,y}
+    bottomL.x = (x * W/3)+pf;
+    bottomL.y = (y*H/3)+H/3-pf;
+    p5.stroke(c);
+    p5.strokeWeight(10);
+    p5.line(topL.x,topL.y,bottomR.x,bottomR.y);
+    p5.line(topR.x,topR.y,bottomL.x,bottomL.y);
+  }
+  function drawO(p5,x,y,c){
+    c = "white";
+    let pf = x * 0.2;
+    p5.fill('black')
+    p5.stroke(c);
+    p5.strokeWeight(10);
+    let edgeX = x * W/3;
+    let edgeY = y * H/3;
+    let mid = (W/3) - (W/3)/2;
+    let centerX = edgeX+mid;
+    let centerY = edgeY+mid;
+    p5.ellipse(centerX, centerY,mid*2*0.8);
+  }
   const mouseClicked = (p5) => {
     console.log("turn:  " + turn)
     if (true) {
