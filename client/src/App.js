@@ -12,7 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 function App() {
   const userLink = uuidv4();
   return (
-    <Router>
+    <div children="App">
+      <Router>
       <div style={{alignContent:"center"}}>
         
         <Route exact path="/" render={props=>(
@@ -29,6 +30,8 @@ function App() {
         </Route>
       </div>
     </Router>
+    </div>
+    
   );
 }
 
