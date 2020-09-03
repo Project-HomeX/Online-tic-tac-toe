@@ -1,19 +1,14 @@
-
-import React, { useState, useEffect } from 'react';
-import socketIOClient from "socket.io-client";
-// import logo from './logo.svg';
-// import './App.css';
+import React from 'react';
 
 import Sketch from "react-p5";
-import p5 from 'p5';
+// import p5 from 'p5';
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 let flag = true;
-let color = 'red'
 let x;
 let y;
 let win;
-let globalP5;
+// let globalP5;
 let turn = true;
 let W = 400;
 let H = 400;
@@ -22,15 +17,7 @@ let isResized = false;
 
 function TicSinglPlayerF(props) {
 
-    //Don't want to play game until we have 2 players
-
-
-  // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  //const [matrix, setMatrix] = useState([[0, 0, 0],[0, 0, 0],[0, 0, 0]]);
-  //const [flag, setFlag] = useState(true);
   const setup = (p5, canvasParentRef) => {
-    // use parent to render the canvas in this ref
-    // (without that p5 will render the canvas outside of your component)
     W = p5.windowWidth*0.5;
     H = p5.windowHeight*0.5;
 
@@ -38,7 +25,7 @@ function TicSinglPlayerF(props) {
     W = H = W<H?W:H
     p5.createCanvas(W, H).parent(canvasParentRef);
     update(p5);
-    globalP5 = p5;
+    // globalP5 = p5;
   };
 
   const windowResized = (p5) => {
@@ -58,14 +45,6 @@ function TicSinglPlayerF(props) {
       update(p5);
       isResized = false;
     }
-    // if(props.isGenerator){
-    //   console.log("Befor e JoinRoom " + socket.id)
-    //   props.genId(socket.id);
-    //   props.falseIsGenerator();
-    //   console.log(socket)
-    //   socket.emit('JoinRoom', socket.id);
-    //   console.log("Af te  r  Jo in Room " + socket.id)
-    // }  
   }
   function update(p5) {
 
@@ -77,7 +56,6 @@ function TicSinglPlayerF(props) {
       flag = true;
       win = false;
       turn = true;
-      color = 'red'
     }
     
     p5.background(0);
@@ -95,12 +73,12 @@ function TicSinglPlayerF(props) {
     if(isResized){
       for(let i = 0; i<matrix.length; i++){
         for(let j = 0; j<matrix.length; j++){
-          if(matrix[i][j] == -1){
+          if(matrix[i][j] === -1){
             colorBoxes(p5,i,j,"red");
             drawO(p5,i,j,'red');
             
           }
-          else if(matrix[i][j] == 1){
+          else if(matrix[i][j] === 1){
             colorBoxes(p5,i,j,"blue");
             drawX(p5,i,j,'blue');
           }
@@ -109,33 +87,13 @@ function TicSinglPlayerF(props) {
     }
   }
   function colorBoxes(p5, x, y,c) {
-
     if(isResized){
       p5.fill(c);
     }
     else{
       let color = (flag) ? "blue" : "red";
-      // p5.fill(color);
-      (color=='blue')?drawX(p5,x,y,"white"):drawO(p5,x,y,"white");
+      (color==='blue')?drawX(p5,x,y,"white"):drawO(p5,x,y,"white");
     }
-    // console.log(c);
-    // p5.rect(x * W/3, y * H/3, W/3, H/3);
-
-    // draw x
-    // start: top right
-    // drawX(p5,x,y,"blue");
-    // drawO(p5,x,y,"black");
-    // change
-
-    // if (c === 'red') {
-    //   color = 'blue';
-    // }
-    // if (c === 'blue') {
-    //   color = 'red';
-    // }
-    // // logic(p5);
-    // console.log(color)
-    // console.log(matrix)
   }
   
   function drawX(p5,x,y,c){
@@ -161,7 +119,7 @@ function TicSinglPlayerF(props) {
   }
   function drawO(p5,x,y,c){
     c = "white";
-    let pf = x * 0.2;
+   // let pf = x * 0.2;
     p5.fill('black')
     p5.stroke(c);
     p5.strokeWeight(10);
@@ -175,8 +133,6 @@ function TicSinglPlayerF(props) {
   const mouseClicked = (p5) => {
     console.log("turn:  " + turn)
     if (true) {
-     // console.log("player  count: " + props.playerCount)
-      // setTurn(false)
       x = p5.mouseX;
       y = p5.mouseY;
       console.log("win line 94 "+win)
@@ -190,11 +146,6 @@ function TicSinglPlayerF(props) {
            } else {
              tempVal = 1; 
            }
-        //   if (color == 'red') {
-        //     tempVal = -1;
-        //   } else {
-        //     tempVal = 1;
-        //   }
           flag = !flag;
          matrix[px][py] = tempVal;
 
@@ -207,9 +158,6 @@ function TicSinglPlayerF(props) {
       }
     }
   };
-  // end
-
-  //[v1,v2,v3,h1,h2,h3,d1,d1]
   function addToSum(x, y, v) {
     if (x === 0 && y === 0) {
       sum[0] += v;
@@ -255,29 +203,17 @@ function TicSinglPlayerF(props) {
           }else{
             props.updateScore(0, 1)
           }
-      // didWin ? props.updateScore(1, 0, didWin) : props.updateScore(0, 1, didWin);
         win = true;
         console.log("updating scor e after win - true :")
         console.log(matrix)
       }
     }
   }
-  /*
-    const draw = (p5) => {
-      p5.ellipse(x, y, 70, 70);
-      // NOTE: Do not use setState in the draw function or in functions that are executed
-      // in the draw function...
-      // please use normal variables or class properties for these purposes
-      x++;
-    };
-    */
-
   return (<Sketch style={{
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: "5em",
-    // backgroundColor: '#00cc96'
   }} setup={setup} windowResized={windowResized} draw={draw} mouseClicked={mouseClicked} />);
 };
 

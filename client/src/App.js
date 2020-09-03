@@ -1,13 +1,10 @@
 import React from 'react';
 import './App.css';
 import Game from "./components/Game"
-import Board from "./components/Board"
 import Entry from "./components/Entry"
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import WaitingRoom from "./components/WaitingRoom";
 import { v4 as uuidv4 } from 'uuid';
-
-
 
 function App() {
   const userLink = uuidv4();
@@ -18,7 +15,6 @@ function App() {
         <Route exact path="/" render={props=>(
           <Entry />
         )}/>
-        {/* <Route path="/WaitingRoom" component={WaitingRoom}/> */}
         <Route path="/RandomGame" component={Game}/>
         <Route path="/game" component={Game}/>
         <Route path="/WaitingRoom">
