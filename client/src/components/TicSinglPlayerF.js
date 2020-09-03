@@ -1,14 +1,12 @@
 import React from 'react';
 
 import Sketch from "react-p5";
-// import p5 from 'p5';
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 let flag = true;
 let x;
 let y;
 let win;
-// let globalP5;
 let turn = true;
 let W = 400;
 let H = 400;
@@ -25,7 +23,6 @@ function TicSinglPlayerF(props) {
     W = H = W<H?W:H
     p5.createCanvas(W, H).parent(canvasParentRef);
     update(p5);
-    // globalP5 = p5;
   };
 
   const windowResized = (p5) => {
@@ -86,6 +83,9 @@ function TicSinglPlayerF(props) {
       }
     }
   }
+
+  // here color box is a helper func to draw Os and Xs based on size.
+  // it does not color any boxes since single player is done using Xs and Os not rectangles. 
   function colorBoxes(p5, x, y,c) {
     if(isResized){
       p5.fill(c);
@@ -96,6 +96,7 @@ function TicSinglPlayerF(props) {
     }
   }
   
+
   function drawX(p5,x,y,c){
     c = 'white';
     let pf = (W/3)*0.2;
@@ -130,6 +131,7 @@ function TicSinglPlayerF(props) {
     let centerY = edgeY+mid;
     p5.ellipse(centerX, centerY,mid*2*0.8);
   }
+
   const mouseClicked = (p5) => {
     console.log("turn:  " + turn)
     if (true) {
@@ -150,7 +152,6 @@ function TicSinglPlayerF(props) {
          matrix[px][py] = tempVal;
 
           turn = false;
-          // color = 'blue';
           addToSum(px, py, tempVal);
           logic(p5, true)
           colorBoxes(p5, px, py)
