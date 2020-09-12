@@ -9,6 +9,13 @@ Sketch{
 h1 {
     color: blue;
 }
+.menu-div, h3 {
+    color: rgb(132, 132, 221);
+}
+.menu-div, button {
+    padding: 10%;
+    margin-bottom: 5% ;
+}
 .dividing {
     display:flex; 
     flex-direction:row;

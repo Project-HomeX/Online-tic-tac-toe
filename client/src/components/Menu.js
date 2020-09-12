@@ -1,5 +1,4 @@
 import React from 'react';
-
 /**
  * A menu component containing what is displayed other than the canvas such as
  * 1. buttons (restat and join)
