@@ -48,8 +48,6 @@ function Tic(props) {
 
     socket.on("updateMatrix", ({ tempVal, x, y, color, swin, playerCount }) => {
       // swin let as know the other players move has won the game.
-      // console.log("inside update matrix")
-      // console.log("props:  " + props.playerCount + " from socket: " + playerCount);
       if (numberOfPlayersConnected === 2) {
         matrix[x][y] = tempVal;
         colorBoxes(globalP5, x, y, color);

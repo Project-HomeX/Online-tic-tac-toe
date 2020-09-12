@@ -1,7 +1,8 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-
+// TODO abrham
+// if you feel like adding any comment pls do else delete this comment.
 const PORT = process.env.PORT || 4000;
 const index = require("./index");
 
@@ -23,8 +24,7 @@ let numClients = 0;
 io.on('connect', socket => {
     numClients++;
     console.log("Client has Joined");
-    // if(users.length<2)
-    //users.push(socket);
+
     if (true) {
         socket.on("sendNewMove", ({ tempVal, x, y, color, win, room, playerCount }) => {
             console.log("Server  recived the  following values\nx: " + x + " y: " + y)
