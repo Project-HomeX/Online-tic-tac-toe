@@ -1,5 +1,10 @@
-// This component is supposed to represent each squares
 import React from 'react';
+
+/**
+ * A menu component containing what is displayed other than the canvas such as
+ * 1. buttons (restat and join)
+ * 2. number of players
+ */
 
 class Menu extends React.Component {
 

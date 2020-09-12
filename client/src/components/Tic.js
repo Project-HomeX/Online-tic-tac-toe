@@ -2,6 +2,10 @@
 import React, { useEffect } from 'react';
 import socketIOClient from "socket.io-client";
 
+/**
+ * Multiplyer Tic-tac-toe using p5 library
+ * This is where the game logic is taken care of.
+ */
 import Sketch from "react-p5";
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -27,7 +31,7 @@ function Tic(props) {
       props.setRoomId(room);
     })
     socket.on("set-player-count", (count) => {
-      console.log("set-player-count")
+     // console.log("set-player-count")
       numberOfPlayersConnected = count;
       props.setPlayerCount(count);
     })
@@ -41,9 +45,11 @@ function Tic(props) {
       console.log("trying to update matrix");
     })
 
+
     socket.on("updateMatrix", ({ tempVal, x, y, color, swin, playerCount }) => {
-      console.log("inside update matrix")
-      console.log("props:  " + props.playerCount + " from socket: " + playerCount);
+      // swin let as know the other players move has won the game.
+      // console.log("inside update matrix")
+      // console.log("props:  " + props.playerCount + " from socket: " + playerCount);
       if (numberOfPlayersConnected === 2) {
         matrix[x][y] = tempVal;
         colorBoxes(globalP5, x, y, color);
@@ -68,6 +74,9 @@ function Tic(props) {
     globalP5 = p5;
   };
   const draw = (p5) => {
+    // TODO for Abrham
+    // can you say what isClicked referes to.
+    // I assume its restart?
     if (props.isClicked) {
       if (props.playerCount === 2) socket.emit('reset', props.roomId);
       update(p5);
@@ -103,7 +112,7 @@ function Tic(props) {
     p5.fill(c);
     p5.rect(x * 200, y * 200, 200, 200);
 
-    // change
+    // change the color to be drawn based on whose turn it is.
     if (c === 'red') {
       color = 'blue';
     }
@@ -188,15 +197,6 @@ function Tic(props) {
       }
     }
   }
-  /*
-    const draw = (p5) => {
-      p5.ellipse(x, y, 70, 70);
-      // NOTE: Do not use setState in the draw function or in functions that are executed
-      // in the draw function...
-      // please use normal variables or class properties for these purposes
-      x++;
-    };
-    */
 
   return (<Sketch style={{
     display: "flex",

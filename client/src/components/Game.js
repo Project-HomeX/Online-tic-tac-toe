@@ -5,6 +5,13 @@ import Menu from './Menu'
 import './Game.css'
 import Score from './Score';
 
+/**
+ * A component containing 
+ * 1. game canvas
+ * 2. buttons to join game and restart game
+ * 4. score
+ * 
+ */
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
@@ -70,6 +77,11 @@ class Game extends React.Component {
 		this.setState({ displayedText: "", isClicked: true });
 	}
 
+	// TODO for Abrham
+	// needs explanation; false clicked is isClicked is not intuiative
+	/**
+	 * 
+	 */
 	falseIsClicked() {
 		this.setState({ isClicked: false });
 	}
@@ -81,6 +93,9 @@ class Game extends React.Component {
 	}
 
 	render() {
+
+		// holds which Tic-tac-toe mode should be desplayed i.e single, remote etc
+		// which game-mode will be displayed is decided based on what a user uses at Entry.
 		let TicToDisplay;
 		if (this.props.single) {
 			TicToDisplay = <TicSinglPlayerF updateScore={this.updateScore}

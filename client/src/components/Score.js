@@ -6,8 +6,8 @@ class Score extends React.Component {
         let Opponent = "Opponent"
 
         if(this.props.single){
-            You = "Red";
-            Opponent="Blue"
+            You = "O";
+            Opponent="X"
         }
         return (
             <div>

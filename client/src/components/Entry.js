@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+
+/* An entry component.
+    when a game is started, the page is first loaded, this the component that will appear
+
+    A user has three optional ways of playing the game.
+    1. remotly with 
+ */
+
 var EntryContainer = {
     display: 'flex',
     justifyContent: 'center',

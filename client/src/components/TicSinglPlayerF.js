@@ -1,6 +1,11 @@
 import React from 'react';
 
 import Sketch from "react-p5";
+
+/*
+  This file contains the logic needed to play single player tic-tac-toe game.
+  in this case single player means two players playing on one local browser i.e not remote play
+*/
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 let flag = true;
