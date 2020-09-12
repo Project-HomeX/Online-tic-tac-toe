@@ -2,11 +2,15 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import './Game.css'
+
+/**
+ * Contains a link which can be sent to a remote friend or a different browser
+ */
 export class WaitingRoom extends Component {
     constructor(props){
         super(props);
         this.state = {
-            value: "localhost:3000/game/" + props.userLink,
+            value: "localhost:3000/game/" + props.userLink, // a link on wich a socket.io listens and room is created
             copied: false,
         };
     }

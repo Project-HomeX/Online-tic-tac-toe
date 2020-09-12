@@ -1,18 +1,21 @@
-    import React, { Component } from 'react'
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
-import Game from './Game'
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+
+/* An entry component.
+    when a game is started, the page is first loaded, this the component that will appear
+
+    A user has three optional ways of playing the game.
+    1. remotly with 
+ */
+
 var EntryContainer = {
     display: 'flex',
     justifyContent: 'center',
     padding: '4em'
-   // top: '50%',
-   // transform: 'translate(-50%, -50%)'
 }
 var EntryChildContainer = {
     color:'white',
     padding: '1em',
-    
-   // maxWidth: '80%',
 }
 const linkStyle = {
     color: 'white',
@@ -25,7 +28,6 @@ export class Entry extends Component {
             <div style={EntryContainer}>
                 <div style={EntryChildContainer}>
                     <h1>Welcome to Tic Tact Toe Online</h1>
-                    {/* <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" /> */}
                     <Link style={linkStyle} to="/WaitingRoom"><button type="button" class="btn btn-primary btn-sm btn-block">Play A friend Remotly</button></Link>
                     <Link style={linkStyle} to="/RandomGame"><button type="button" class="btn btn-primary btn-sm btn-block">Join Random Game</button></Link>
                     <Link style={linkStyle} to="/LocalGame"><button type="button" class="btn btn-primary btn-sm btn-block">Play a friend locally</button></Link>

@@ -1,7 +1,8 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-
+// TODO abrham
+// if you feel like adding any comment pls do else delete this comment.
 const PORT = process.env.PORT || 4000;
 const index = require("./index");
 
@@ -23,18 +24,10 @@ let numClients = 0;
 io.on('connect', socket => {
     numClients++;
     console.log("Client has Joined");
-    // if(users.length<2)
-    //users.push(socket);
+
     if (true) {
-        //  let otherSocket = users.find(user => user.id !== socket.id);
-        // console.log("other: "+ otherSocket.id + " this:" + socket.id);
-        //io.broadcast('setUp', turn);
         socket.on("sendNewMove", ({ tempVal, x, y, color, win, room, playerCount }) => {
-            // otherSocket = users.find(user => user.id !== socket.id);
             console.log("Server  recived the  following values\nx: " + x + " y: " + y)
-            // otherSocket.emit('changeTurn');
-            // console.log("turn: "+turn)
-            //socket.broadcast.emit("updateMatrix", { tempVal,x, y,color});
             console.log('room: ' + room)
             socket.to(room).emit("updateMatrix", { tempVal, x, y, color, win, playerCount });
         })
@@ -95,18 +88,6 @@ io.on('connect', socket => {
                     RandomPlayersRoom['/RandomGame/' + socket.id] = [socket.id];
                 }
             }
-
-            // if (!rooms.includes(socket.id)) {
-            //     console.log("Inside findandjoin")
-            //     console.log(io.sockets.adapter.rooms[room])
-            //     let r = io.sockets.adapter.rooms[room];
-            //     if (r.length == 1) {
-            //         socket.join(room);
-            //     }
-            //     console.log(io.sockets.adapter.rooms[room])
-            // }
-
-
         })
 
         socket.on('reset', (room) => {

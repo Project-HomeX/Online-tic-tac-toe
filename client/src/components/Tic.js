@@ -1,9 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import socketIOClient from "socket.io-client";
-// import logo from './logo.svg';
-// import './App.css';
 
+/**
+ * Multiplyer Tic-tac-toe using p5 library
+ * This is where the game logic is taken care of.
+ */
 import Sketch from "react-p5";
 let sum = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -30,7 +32,7 @@ function Tic(props) {
       props.setRoomId(room);
     })
     socket.on("set-player-count", (count) => {
-      console.log("set-player-count")
+     // console.log("set-player-count")
       numberOfPlayersConnected = count;
       props.setPlayerCount(count);
     })
@@ -44,23 +46,16 @@ function Tic(props) {
       console.log("trying to update matrix");
     })
 
+
     socket.on("updateMatrix", ({ tempVal, x, y, color, swin, playerCount }) => {
-      console.log("inside update matrix")
-      //numberOfPlayersConnected = playerCount;
-      //props.setPlayerCount(playerCount)
-      console.log("props:  " + props.playerCount + " from socket: " + playerCount);
-      if (numberOfPlayersConnected == 2) {
-        // console.log("player  count: " + props.playerCount)
+      // swin let as know the other players move has won the game.
+      if (numberOfPlayersConnected === 2) {
         matrix[x][y] = tempVal;
-        // console.log('after  matrix  update: ' + turn + ' ' + color)
         colorBoxes(globalP5, x, y, color);
         win = swin;
         turn = true;
-        // console.log("matrix after apdate: ")
-        // console.log(matrix)
         addToSum(x, y, tempVal)
         logic(globalP5, false);
-        // color = 'red';
         console.log("Recived values\n X: " + x + " Y: " + y);
       }
     });
@@ -68,13 +63,8 @@ function Tic(props) {
     socket.on('reset', () => {
       update(globalP5);
     })
-
-
   }, []);
 
-  // const [sum, setSum] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
-  //const [matrix, setMatrix] = useState([[0, 0, 0],[0, 0, 0],[0, 0, 0]]);
-  //const [flag, setFlag] = useState(true);
   const setup = (p5, canvasParentRef) => {
     // use parent to render the canvas in this ref
     // (without that p5 will render the canvas outside of your component)
@@ -84,9 +74,7 @@ function Tic(props) {
     p5.createCanvas(W, H).parent(canvasParentRef);
     update(p5);
     globalP5 = p5;
-  };
-
-  const windowResized = (p5) => {
+  } = (p5) => {
     W = p5.windowWidth*0.5;
     H = p5.windowHeight*0.5;
     W = H = W<H?W:H
@@ -95,8 +83,11 @@ function Tic(props) {
     isResized = true;
   }
   const draw = (p5) => {
+    // TODO for Abrham
+    // can you say what isClicked referes to.
+    // I assume its restart?
     if (props.isClicked) {
-      if (props.playerCount == 2) socket.emit('reset', props.roomId);
+      if (props.playerCount === 2) socket.emit('reset', props.roomId);
       update(p5);
       props.falseIsClicked();
     }
@@ -106,8 +97,6 @@ function Tic(props) {
     }
     if (props.isJoiner) {
       socket.emit('findAndJoin', props.roomId, props.setPlayerCount);
-      // console.log(socket)
-      // console.log("Button join is being clicked! ")
       props.falseIsJoiner();
     }
   }
@@ -153,29 +142,22 @@ function Tic(props) {
 
   }
   function colorBoxes(p5, x, y, c) {
-    // console.log(c);
-    // let color = (flag) ? "blue" : "red";
 
+   // p5.fill(c);
+   // p5.rect(x * 200, y * 200, 200, 200);
     if(isResized){
       p5.fill(c);
     }else{
-     // let color = (flag) ? "blue" : "red";
-      // p5.fill(color);
       (color=='blue')?drawX(p5,x,y,"white"):drawO(p5,x,y,"white");
     }
-    //p5.rect(x * 200, y * 200, 200, 200);
 
-    // change
-
+    // change the color to be drawn based on whose turn it is.
     if (c === 'red') {
       color = 'blue';
     }
     if (c === 'blue') {
       color = 'red';
     }
-    // logic(p5);
-    // console.log(color)
-    // console.log(matrix)
   }
   function drawX(p5,x,y,c){
     c = 'white';
@@ -213,9 +195,8 @@ function Tic(props) {
   }
   const mouseClicked = (p5) => {
     console.log("number of players" + numberOfPlayersConnected)
-    if (turn && numberOfPlayersConnected == 2) {
+    if (turn && numberOfPlayersConnected === 2) {
       console.log("player   count: " + props.playerCount)
-      // setTurn(false)
       x = p5.mouseX;
       y = p5.mouseY;
       if (x < W && y < H && !win && x > 0 && y > 0) {
@@ -223,12 +204,7 @@ function Tic(props) {
         let py = p5.floor(y / (H/3));
         let tempVal = -1;
         if (matrix[px][py] === 0) {
-          /* if (flag) {
-             tempVal = -1;
-           } else {
-             tempVal = 1; 
-           }*/
-          if (color == 'red') {
+          if (color === 'red') {
             tempVal = -1;
           } else {
             tempVal = 1;
@@ -237,7 +213,6 @@ function Tic(props) {
           matrix[px][py] = tempVal;
 
           turn = false;
-          // color = 'blue';
           addToSum(px, py, tempVal);
           logic(p5, true)
           socket.emit("sendNewMove", ({ tempVal, x: px, y: py, color, win, room: props.roomId, playerCount: props.playerCount }));
@@ -295,15 +270,6 @@ function Tic(props) {
       }
     }
   }
-  /*
-    const draw = (p5) => {
-      p5.ellipse(x, y, 70, 70);
-      // NOTE: Do not use setState in the draw function or in functions that are executed
-      // in the draw function...
-      // please use normal variables or class properties for these purposes
-      x++;
-    };
-    */
 
   return (<Sketch style={{
     display: "flex",

@@ -1,17 +1,17 @@
-//This is supposed to represent the game from one client side.
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Sketch from 'react-p5';
 import Tic from './Tic';
 import TicSinglPlayerF from './TicSinglPlayerF'
-import { v4 as uuidv4 } from 'uuid';
 import Menu from './Menu'
 import './Game.css'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Score from './Score';
 
-
-//import { post } from '../../../server/routes';
+/**
+ * A component containing 
+ * 1. game canvas
+ * 2. buttons to join game and restart game
+ * 4. score
+ * 
+ */
 class Game extends React.Component {
 	constructor(props) {
 		super(props);
@@ -28,7 +28,6 @@ class Game extends React.Component {
 			roomId: "",
 			playerCount: 0
 		}
-		//console.log(props)
 		this.updateScore = this.updateScore.bind(this);
 		this.removeText = this.removeText.bind(this);
 		this.genId = this.genId.bind(this);
@@ -54,18 +53,6 @@ class Game extends React.Component {
 
 	genId(id) {
 		this.setState({ id: id });
-		// let id = uuidv4().substring(0, 8);
-		// this.setState({ id: id });
-		// fetch('http://localhost:3000/generateId',
-		// 	{
-		// 		method: "POST",
-		// 		body: JSON.stringify({
-		// 			id: id
-		// 		}),
-		// 		headers: {
-		// 			"Content-type": "application/json; charset=UTF-8"
-		// 		}
-		// 	})
 	}
 	handleJoin(e) {
 		this.setState({ isJoiner: true });
@@ -90,6 +77,11 @@ class Game extends React.Component {
 		this.setState({ displayedText: "", isClicked: true });
 	}
 
+	// TODO for Abrham
+	// needs explanation; false clicked is isClicked is not intuiative
+	/**
+	 * 
+	 */
 	falseIsClicked() {
 		this.setState({ isClicked: false });
 	}
@@ -101,6 +93,9 @@ class Game extends React.Component {
 	}
 
 	render() {
+
+		// holds which Tic-tac-toe mode should be desplayed i.e single, remote etc
+		// which game-mode will be displayed is decided based on what a user uses at Entry.
 		let TicToDisplay;
 		if (this.props.single) {
 			TicToDisplay = <TicSinglPlayerF updateScore={this.updateScore}
@@ -135,25 +130,6 @@ class Game extends React.Component {
 					playerCount={this.state.playerCount}
 					single = {this.props.single}
 				/>
-				{/*<Tic updateScore={this.updateScore}
-					isClicked={this.state.isClicked}
-					falseIsClicked={this.falseIsClicked}
-					genId={this.genId}
-					isGenerator={this.state.isGenerator}
-					falseIsGenerator={this.falseIsGenerator}
-					isJoiner={this.state.isJoiner}
-					falseIsJoiner={this.falseIsJoiner}
-					joiningId = {this.state.joiningId}
-					id = {this.state.id}
-					roomId = {this.state.roomId}
-					setRoomId = {this.setRoomId}
-					playerCount = {this.state.playerCount}
-					setPlayerCount = {this.setPlayerCount}
-		/>*/}
-				{/* <TicSinglPlayerF updateScore={this.updateScore}
-								isClicked={this.state.isClicked}
-								falseIsClicked={this.falseIsClicked}
-				 /> */}
 
 				{TicToDisplay}
 				<Score
